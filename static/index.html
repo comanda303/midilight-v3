@@ -107,6 +107,12 @@
         <label>Universe</label><input id="f-universe" type="number" value="0">
         <label>Start CH</label><input id="f-ch" type="number" value="0">
         <button class="primary" onclick="applyFixture()" style="grid-column:1/-1;margin-top:8px">Apply</button>
+        <button id="select-group-btn" onclick="selectGroupOfCurrent()" style="grid-column:1/-1;margin-top:4px;display:none">Select Group</button>
+      </div>
+      <div id="group-form" style="display:none">
+        <div style="color:#888;font-size:11px;text-transform:uppercase;margin-bottom:6px">Group: <span id="group-name-display"></span></div>
+        <div id="group-members" style="font-size:11px;color:#aaa;margin-bottom:10px"></div>
+        <button class="danger" onclick="ungroupSelected()" style="width:100%">Ungroup</button>
       </div>
     </div>
   </div>
