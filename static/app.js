@@ -408,6 +408,26 @@ function rotateGroup() {
   showGroupForm(selectedGroup);
 }
 
+function uniqueGroupName(base) {
+  const existing = new Set(fixtures.map(f => f.group).filter(g => g));
+  let candidate = `${base}_copy`;
+  let n = 2;
+  while (existing.has(candidate)) {
+    candidate = `${base}_copy${n}`;
+    n++;
+  }
+  return candidate;
+}
+
+function copyGroup() {
+  if (selectedGroup === null) return;
+  const members = fixtures.filter(f => f.group === selectedGroup);
+  const newGroupName = uniqueGroupName(selectedGroup);
+  const copies = members.map(f => ({...f, name: `${f.name}_copy`, group: newGroupName, universe: f.universe + 1}));
+  fixtures.push(...copies);
+  selectGroup(newGroupName);
+}
+
 function applyFixture() {
   if (selectedFixture === null) return;
   fixtures[selectedFixture] = {
