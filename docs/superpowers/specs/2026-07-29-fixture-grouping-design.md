@@ -32,13 +32,14 @@ Only one of `selectedFixture` / `selectedGroup` is active at a time — selectin
 
 Shown only while `selectedGroup !== null`. Contains:
 
-1. **Bulk-set fields** — one shared value applied to every member at once, each with its own input + "Apply to Group" button:
+1. **Move Group (keyboard)** — while a group is selected, the existing arrow-key nudge (already used for a single fixture: 1px, or 10px with Shift) applies to every member simultaneously, by the same delta, preserving each member's position relative to the others. This is the "move as a rigid unit" half of the "move/rotate as a rigid unit" decision from brainstorming — it reuses the existing keydown handler, just branching on whether a group or a single fixture is selected, no new UI element.
+2. **Bulk-set fields** — one shared value applied to every member at once, each with its own input + "Apply to Group" button:
    - **Length** — sets `length` on every member.
    - **Universe** — sets `universe` on every member.
    - **Name prefix** — renames every member to `` `${prefix}_${i+1}` `` where `i` is the member's index within the group, counted in the order members appear in the `fixtures` array (stable, matches how `Tab`-cycling already orders fixtures).
-2. **Rotate Group** button — see geometry below.
-3. **Copy Group** button — see below.
-4. **Ungroup** button — replaces "Delete Selected" in this mode (same button position, different label+handler): clears `group` on every member. Fixtures themselves are **not** deleted — per your call, this is the non-destructive default. Deleting an individual fixture still works exactly as today, via the single-fixture form's existing "Delete Selected."
+3. **Rotate Group** button — see geometry below.
+4. **Copy Group** button — see below.
+5. **Ungroup** button — replaces "Delete Selected" in this mode (same button position, different label+handler): clears `group` on every member. Fixtures themselves are **not** deleted — per your call, this is the non-destructive default. Deleting an individual fixture still works exactly as today, via the single-fixture form's existing "Delete Selected."
 
 ## Rotate Group — geometry
 
