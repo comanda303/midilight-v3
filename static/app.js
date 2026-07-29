@@ -251,7 +251,7 @@ gridCanvas.onclick = e => {
 };
 
 function addStrip() {
-  fixtures.push({name: `strip_${fixtures.length+1}`, x:0, y:0,
+  fixtures.push({name: `strip_${fixtures.length+1}`, group:'', x:0, y:0,
                  orientation:'V', length:40, universe:0, start_channel:0});
   selectedFixture = fixtures.length - 1;
   showFixtureForm(fixtures[selectedFixture]);
@@ -279,6 +279,7 @@ function deleteStrip() {
 function showFixtureForm(f) {
   document.getElementById('fixture-form').style.display = 'grid';
   document.getElementById('f-name').value = f.name || '';
+  document.getElementById('f-group').value = f.group || '';
   document.getElementById('f-x').value = f.x;
   document.getElementById('f-y').value = f.y;
   document.getElementById('f-orient').value = f.orientation || 'H';
@@ -290,6 +291,7 @@ function applyFixture() {
   if (selectedFixture === null) return;
   fixtures[selectedFixture] = {
     name: document.getElementById('f-name').value,
+    group: document.getElementById('f-group').value.trim(),
     x: +document.getElementById('f-x').value,
     y: +document.getElementById('f-y').value,
     orientation: document.getElementById('f-orient').value,
