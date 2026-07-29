@@ -1,0 +1,79 @@
+app:
+  clip_crossfade_ms: 0
+  preset_transition_ms: 200
+  velocity_scales_brightness: true
+artnet:
+  ip: 10.0.0.23
+  port: 6454
+midi:
+  assignments:
+    blend:
+      channel: 1
+      number: 1
+      type: cc
+    fader_1:
+      channel: 1
+      number: 24
+      type: cc
+    fader_10:
+      channel: 1
+      number: 33
+      type: cc
+    fader_11:
+      channel: 1
+      number: 34
+      type: cc
+    fader_12:
+      channel: 1
+      number: 35
+      type: cc
+    fader_2:
+      channel: 1
+      number: 25
+      type: cc
+    fader_3:
+      channel: 1
+      number: 26
+      type: cc
+    fader_4:
+      channel: 1
+      number: 27
+      type: cc
+    fader_5:
+      channel: 1
+      number: 28
+      type: cc
+    fader_6:
+      channel: 1
+      number: 29
+      type: cc
+    fader_7:
+      channel: 1
+      number: 30
+      type: cc
+    fader_8:
+      channel: 1
+      number: 31
+      type: cc
+    fader_9:
+      channel: 1
+      number: 32
+      type: cc
+    master:
+      channel: 1
+      number: 0
+      type: cc
+    strobe_depth:
+      channel: 1
+      number: 3
+      type: cc
+    strobe_rate:
+      channel: 1
+      number: 2
+      type: cc
+    strobe_toggle:
+      channel: 1
+      number: 88
+      type: note
+  channel: 1
+  port_name: LightShow

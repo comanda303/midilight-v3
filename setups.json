@@ -1,0 +1,473 @@
+{
+  "erste schritte 2": {
+    "assignments": {
+      "master": {
+        "type": "cc",
+        "number": 0,
+        "channel": 1
+      },
+      "blend": {
+        "type": "cc",
+        "number": 1,
+        "channel": 1
+      },
+      "strobe_rate": {
+        "type": "cc",
+        "number": 2,
+        "channel": 1
+      },
+      "strobe_depth": {
+        "type": "cc",
+        "number": 3,
+        "channel": 1
+      },
+      "fader_1": {
+        "type": "cc",
+        "number": 24,
+        "channel": 1
+      },
+      "fader_2": {
+        "type": "cc",
+        "number": 25,
+        "channel": 1
+      },
+      "fader_3": {
+        "type": "cc",
+        "number": 26,
+        "channel": 1
+      },
+      "fader_4": {
+        "type": "cc",
+        "number": 27,
+        "channel": 1
+      },
+      "fader_5": {
+        "type": "cc",
+        "number": 28,
+        "channel": 1
+      },
+      "fader_6": {
+        "type": "cc",
+        "number": 29,
+        "channel": 1
+      },
+      "fader_7": {
+        "type": "cc",
+        "number": 30,
+        "channel": 1
+      },
+      "fader_8": {
+        "type": "cc",
+        "number": 31,
+        "channel": 1
+      },
+      "fader_9": {
+        "type": "cc",
+        "number": 32,
+        "channel": 1
+      },
+      "fader_10": {
+        "type": "cc",
+        "number": 33,
+        "channel": 1
+      },
+      "fader_11": {
+        "type": "cc",
+        "number": 34,
+        "channel": 1
+      },
+      "fader_12": {
+        "type": "cc",
+        "number": 35,
+        "channel": 1
+      },
+      "strobe_toggle": {
+        "type": "note",
+        "number": 88,
+        "channel": 1
+      }
+    },
+    "fixtures": {
+      "canvas": {
+        "width": 200,
+        "height": 100
+      },
+      "fixtures": [
+        {
+          "name": "strip_1",
+          "x": 5,
+          "y": 0,
+          "orientation": "V",
+          "length": 40,
+          "universe": 0,
+          "start_channel": 0
+        },
+        {
+          "name": "strip_2",
+          "x": 5,
+          "y": 40,
+          "orientation": "V",
+          "length": 40,
+          "universe": 0,
+          "start_channel": 120
+        },
+        {
+          "name": "strip_3",
+          "x": 15,
+          "y": 0,
+          "orientation": "V",
+          "length": 40,
+          "universe": 1,
+          "start_channel": 0
+        },
+        {
+          "name": "strip_4",
+          "x": 15,
+          "y": 40,
+          "orientation": "V",
+          "length": 40,
+          "universe": 1,
+          "start_channel": 120
+        },
+        {
+          "name": "strip_5",
+          "x": 40,
+          "y": 10,
+          "orientation": "V",
+          "length": 40,
+          "universe": 1,
+          "start_channel": 0
+        },
+        {
+          "name": "strip_6",
+          "x": 0,
+          "y": 0,
+          "orientation": "H",
+          "length": 40,
+          "universe": 0,
+          "start_channel": 0
+        }
+      ]
+    }
+  },
+  "erste schritte": {
+    "assignments": {
+      "master": {
+        "type": "cc",
+        "number": 0,
+        "channel": 1
+      },
+      "blend": {
+        "type": "cc",
+        "number": 1,
+        "channel": 1
+      },
+      "strobe_rate": {
+        "type": "cc",
+        "number": 2,
+        "channel": 1
+      },
+      "strobe_depth": {
+        "type": "cc",
+        "number": 3,
+        "channel": 1
+      },
+      "fader_1": {
+        "type": "cc",
+        "number": 24,
+        "channel": 1
+      },
+      "fader_2": {
+        "type": "cc",
+        "number": 25,
+        "channel": 1
+      },
+      "fader_3": {
+        "type": "cc",
+        "number": 26,
+        "channel": 1
+      },
+      "fader_4": {
+        "type": "cc",
+        "number": 27,
+        "channel": 1
+      },
+      "fader_5": {
+        "type": "cc",
+        "number": 28,
+        "channel": 1
+      },
+      "fader_6": {
+        "type": "cc",
+        "number": 29,
+        "channel": 1
+      },
+      "fader_7": {
+        "type": "cc",
+        "number": 30,
+        "channel": 1
+      },
+      "fader_8": {
+        "type": "cc",
+        "number": 31,
+        "channel": 1
+      },
+      "fader_9": {
+        "type": "cc",
+        "number": 32,
+        "channel": 1
+      },
+      "fader_10": {
+        "type": "cc",
+        "number": 33,
+        "channel": 1
+      },
+      "fader_11": {
+        "type": "cc",
+        "number": 34,
+        "channel": 1
+      },
+      "fader_12": {
+        "type": "cc",
+        "number": 35,
+        "channel": 1
+      },
+      "strobe_toggle": {
+        "type": "note",
+        "number": 88,
+        "channel": 1
+      }
+    },
+    "fixtures": {
+      "canvas": {
+        "width": 200,
+        "height": 100
+      },
+      "fixtures": [
+        {
+          "name": "strip_1",
+          "x": 5,
+          "y": 0,
+          "orientation": "V",
+          "length": 40,
+          "universe": 0,
+          "start_channel": 0
+        },
+        {
+          "name": "strip_2",
+          "x": 5,
+          "y": 40,
+          "orientation": "V",
+          "length": 40,
+          "universe": 0,
+          "start_channel": 120
+        },
+        {
+          "name": "strip_3",
+          "x": 15,
+          "y": 0,
+          "orientation": "V",
+          "length": 40,
+          "universe": 1,
+          "start_channel": 0
+        },
+        {
+          "name": "strip_4",
+          "x": 15,
+          "y": 40,
+          "orientation": "V",
+          "length": 40,
+          "universe": 1,
+          "start_channel": 120
+        },
+        {
+          "name": "strip_5",
+          "x": 40,
+          "y": 10,
+          "orientation": "V",
+          "length": 40,
+          "universe": 1,
+          "start_channel": 0
+        },
+        {
+          "name": "strip_6",
+          "x": 0,
+          "y": 0,
+          "orientation": "H",
+          "length": 40,
+          "universe": 0,
+          "start_channel": 0
+        }
+      ]
+    }
+  },
+  "val3000": {
+    "assignments": {
+      "master": {
+        "type": "cc",
+        "number": 0,
+        "channel": 1
+      },
+      "blend": {
+        "type": "cc",
+        "number": 1,
+        "channel": 1
+      },
+      "strobe_rate": {
+        "type": "cc",
+        "number": 2,
+        "channel": 1
+      },
+      "strobe_depth": {
+        "type": "cc",
+        "number": 3,
+        "channel": 1
+      },
+      "fader_1": {
+        "type": "cc",
+        "number": 24,
+        "channel": 1
+      },
+      "fader_2": {
+        "type": "cc",
+        "number": 25,
+        "channel": 1
+      },
+      "fader_3": {
+        "type": "cc",
+        "number": 26,
+        "channel": 1
+      },
+      "fader_4": {
+        "type": "cc",
+        "number": 27,
+        "channel": 1
+      },
+      "fader_5": {
+        "type": "cc",
+        "number": 28,
+        "channel": 1
+      },
+      "fader_6": {
+        "type": "cc",
+        "number": 29,
+        "channel": 1
+      },
+      "fader_7": {
+        "type": "cc",
+        "number": 30,
+        "channel": 1
+      },
+      "fader_8": {
+        "type": "cc",
+        "number": 31,
+        "channel": 1
+      },
+      "fader_9": {
+        "type": "cc",
+        "number": 32,
+        "channel": 1
+      },
+      "fader_10": {
+        "type": "cc",
+        "number": 33,
+        "channel": 1
+      },
+      "fader_11": {
+        "type": "cc",
+        "number": 34,
+        "channel": 1
+      },
+      "fader_12": {
+        "type": "cc",
+        "number": 35,
+        "channel": 1
+      },
+      "strobe_toggle": {
+        "type": "note",
+        "number": 88,
+        "channel": 1
+      }
+    },
+    "fixtures": {
+      "canvas": {
+        "width": 200,
+        "height": 100
+      },
+      "fixtures": [
+        {
+          "name": "strip_1",
+          "x": 5,
+          "y": 0,
+          "orientation": "V",
+          "length": 40,
+          "universe": 0,
+          "start_channel": 0
+        },
+        {
+          "name": "strip_2",
+          "x": 5,
+          "y": 40,
+          "orientation": "V",
+          "length": 40,
+          "universe": 0,
+          "start_channel": 120
+        },
+        {
+          "name": "strip_3",
+          "x": 15,
+          "y": 0,
+          "orientation": "V",
+          "length": 40,
+          "universe": 0,
+          "start_channel": 240
+        },
+        {
+          "name": "strip_4",
+          "x": 15,
+          "y": 40,
+          "orientation": "V",
+          "length": 40,
+          "universe": 0,
+          "start_channel": 240
+        },
+        {
+          "name": "strip_5",
+          "x": 52,
+          "y": 7,
+          "orientation": "V",
+          "length": 40,
+          "universe": 1,
+          "start_channel": 0
+        },
+        {
+          "name": "strip_6",
+          "x": 61,
+          "y": 7,
+          "orientation": "V",
+          "length": 40,
+          "universe": 1,
+          "start_channel": 240
+        },
+        {
+          "name": "strip_7",
+          "x": 52,
+          "y": 47,
+          "orientation": "V",
+          "length": 40,
+          "universe": 1,
+          "start_channel": 120
+        },
+        {
+          "name": "strip_8",
+          "x": 61,
+          "y": 47,
+          "orientation": "V",
+          "length": 40,
+          "universe": 1,
+          "start_channel": 240
+        }
+      ]
+    }
+  }
+}

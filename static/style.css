@@ -1,0 +1,66 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #111; color: #eee; font-family: monospace; font-size: 13px; }
+nav { display: flex; gap: 0; background: #1a1a1a; border-bottom: 1px solid #333; }
+nav button { background: none; border: none; color: #999; padding: 10px 20px;
+             cursor: pointer; border-bottom: 2px solid transparent; }
+nav button.active { color: #fff; border-bottom-color: #0af; }
+.page { display: none; padding: 16px; }
+.page.active { display: block; }
+
+#status-bar { display: flex; gap: 16px; align-items: center; padding: 8px 0;
+              border-bottom: 1px solid #222; margin-bottom: 12px; }
+.bpm-display { font-size: 20px; font-weight: bold; color: #0af; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: #333; }
+.dot.active { background: #0f0; }
+.ctrl { display: flex; align-items: center; gap: 6px; }
+.ctrl label { color: #888; }
+
+#faders { display: flex; gap: 10px; margin-bottom: 16px; }
+.fader-col { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.fader-col input[type=range] { writing-mode: vertical-lr; direction: rtl;
+                                width: 28px; height: 120px; cursor: pointer;
+                                accent-color: #0af; }
+.fader-col .fname { font-size: 9px; color: #888; text-align: center; max-width: 36px; }
+.fader-col .fcc { font-size: 9px; color: #555; }
+
+#presets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.preset-btn { width: 38px; height: 28px; background: #222; border: 1px solid #444;
+              color: #aaa; cursor: pointer; border-radius: 3px; font-size: 11px; }
+.preset-btn.active { background: #0af; color: #000; border-color: #0af; }
+.preset-btn.selected { border-color: #0af; border-width: 2px; }
+.preset-btn:hover { border-color: #888; }
+
+#clips { margin-bottom: 16px; }
+#clips h3 { color: #666; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; }
+#clip-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.clip-btn { padding: 3px 8px; background: #1a1a1a; border: 1px solid #333;
+            color: #888; border-radius: 2px; font-size: 11px; cursor: default; }
+.clip-btn.occupied { color: #ccc; border-color: #555; }
+.clip-btn.active { background: #0af; color: #000; border-color: #0af; }
+
+#strobe-section { background: #1a1a1a; border: 1px solid #333; padding: 10px;
+                  border-radius: 4px; display: flex; align-items: center; gap: 16px; }
+#strobe-section.on { border-color: #f50; }
+.strobe-rate-display { font-size: 16px; color: #f80; font-weight: bold; min-width: 80px; }
+
+#canvas-grid { border: 1px solid #333; display: block; cursor: crosshair; }
+#fixture-form { margin-top: 12px; display: grid; grid-template-columns: auto 1fr; gap: 6px 10px; }
+#fixture-form label { color: #888; align-self: center; }
+#fixture-form input, #fixture-form select { background: #222; border: 1px solid #444;
+  color: #eee; padding: 3px 6px; font-family: monospace; width: 100%; }
+
+#midi-table { width: 100%; border-collapse: collapse; }
+#midi-table th { color: #666; text-align: left; padding: 4px 8px;
+                 border-bottom: 1px solid #333; font-weight: normal; }
+#midi-table td { padding: 4px 8px; border-bottom: 1px solid #1a1a1a; }
+#midi-table tr:hover td { background: #1a1a1a; }
+.learn-btn { background: #222; border: 1px solid #444; color: #888;
+             padding: 2px 8px; cursor: pointer; font-size: 11px; }
+.learn-btn.learning { background: #f80; color: #000; border-color: #f80; }
+button.primary { background: #0af; border: none; color: #000; padding: 6px 14px;
+                 cursor: pointer; font-weight: bold; border-radius: 3px; }
+button.danger { background: #600; border: none; color: #eee; padding: 6px 14px;
+                cursor: pointer; border-radius: 3px; }
+
+.algo-thumb.active { outline: 2px solid #0af; }
+.save-flash { background: #0f0 !important; color: #000; }

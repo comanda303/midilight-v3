@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MIDI Lightshow</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav>
+  <button class="active" onclick="showPage('main',this)">Main</button>
+  <button onclick="showPage('fixtures',this)">Fixture Editor</button>
+  <button onclick="showPage('midi',this)">MIDI Routing</button>
+</nav>
+
+<!-- PAGE: MAIN -->
+<div id="page-main" class="page active">
+  <div id="status-bar">
+    <span class="bpm-display" id="bpm-val">120.0</span>
+    <span>BPM</span>
+    <span class="dot" id="clock-dot" title="MIDI clock"></span>
+    <div class="ctrl">
+      <label>Master</label>
+      <input type="range" id="master-fader" min="0" max="127" value="127"
+             oninput="sendCC('set_master', this.value/127)">
+    </div>
+    <div class="ctrl">
+      <label>Blend G↔V</label>
+      <input type="range" id="blend-fader" min="0" max="127" value="0"
+             oninput="sendCC('set_blend', this.value/127)">
+    </div>
+  </div>
+
+  <div style="margin-bottom:16px">
+    <img id="preview" style="width:100%;max-width:600px;height:auto;display:block;border:1px solid #333;background:#000">
+  </div>
+
+  <h3 style="color:#666;font-size:11px;text-transform:uppercase;margin-bottom:8px">Algorithm</h3>
+  <div id="algo-thumbs" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px"></div>
+
+  <h3 style="color:#666;font-size:11px;text-transform:uppercase;margin-bottom:8px">Generator Faders</h3>
+  <div id="faders"></div>
+
+  <h3 style="color:#666;font-size:11px;text-transform:uppercase;margin-bottom:8px">Presets</h3>
+  <div id="presets"></div>
+  <div style="margin-bottom:16px">
+    <button id="save-preset-btn" class="primary" onclick="savePreset()">Save to selected</button>
+  </div>
+
+  <div id="clips">
+    <h3>Clips (notes 0–63)</h3>
+    <div id="clip-list"></div>
+  </div>
+
+  <div id="strobe-section">
+    <div>
+      <div style="color:#888;font-size:10px;text-transform:uppercase">Strobe</div>
+      <div class="strobe-rate-display" id="strobe-rate-display">1/4</div>
+      <div style="font-size:10px;color:#666" id="strobe-bpm-display">@ 120 BPM</div>
+    </div>
+    <div class="ctrl">
+      <label>Rate</label>
+      <input type="range" id="strobe-rate" min="0" max="5" step="1" value="2"
+             oninput="ws.send(JSON.stringify({type:'set_strobe_rate',index:+this.value}))">
+    </div>
+    <div class="ctrl">
+      <label>Depth</label>
+      <input type="range" id="strobe-depth" min="0" max="127" value="127"
+             oninput="sendCC('set_strobe_depth', this.value/127)">
+    </div>
+    <div class="ctrl">
+      <label>Duration</label>
+      <input type="range" id="strobe-duty" min="1" max="126" value="63"
+             oninput="send({type:'set_strobe_duty', value:this.value/127})">
+    </div>
+    <button id="strobe-toggle" onclick="toggleStrobe()" style="margin-top:4px">Strobe OFF</button>
+  </div>
+</div>
+
+<!-- PAGE: FIXTURE EDITOR -->
+<div id="page-fixtures" class="page">
+  <div style="display:flex;gap:16px;align-items:flex-start">
+    <div>
+      <div style="margin-bottom:8px;display:flex;gap:8px;align-items:center">
+        <label>W<input id="canvas-w" type="number" value="200" style="width:60px;margin-left:4px;background:#222;border:1px solid #444;color:#eee;padding:2px 4px"></label>
+        <label>H<input id="canvas-h" type="number" value="100" style="width:60px;margin-left:4px;background:#222;border:1px solid #444;color:#eee;padding:2px 4px"></label>
+        <button class="primary" onclick="applyCanvas()">Apply</button>
+      </div>
+      <canvas id="canvas-grid" width="600" height="300"></canvas>
+    </div>
+    <div style="min-width:220px">
+      <button class="primary" onclick="addStrip()" style="margin-bottom:8px;width:100%">+ Add Strip</button>
+      <button onclick="copyFixture()" style="margin-bottom:8px;width:100%">Copy Fixture</button>
+      <button class="danger" onclick="deleteStrip()" style="margin-bottom:16px;width:100%">Delete Selected</button>
+      <div id="fixture-form" style="display:none">
+        <label>Name</label><input id="f-name" type="text">
+        <label>X</label><input id="f-x" type="number" value="0">
+        <label>Y</label><input id="f-y" type="number" value="0">
+        <label>Orient</label>
+        <select id="f-orient"><option value="H">Horizontal</option><option value="V">Vertical</option></select>
+        <label>Universe</label><input id="f-universe" type="number" value="0">
+        <label>Start CH</label><input id="f-ch" type="number" value="0">
+        <button class="primary" onclick="applyFixture()" style="grid-column:1/-1;margin-top:8px">Apply</button>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:12px">
+    <button class="primary" onclick="saveFixtures()">Save Layout</button>
+  </div>
+  <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+    <input id="setup-name-fixtures" type="text" placeholder="Setup name"
+           style="background:#222;border:1px solid #444;color:#eee;padding:4px 6px">
+    <button class="primary" onclick="saveSetup('fixtures')">Save Setup</button>
+    <select id="setup-select-fixtures" style="background:#222;border:1px solid #444;color:#eee;padding:4px 6px"></select>
+    <button onclick="loadSetup('fixtures')">Load Setup</button>
+  </div>
+</div>
+
+<!-- PAGE: MIDI ROUTING -->
+<div id="page-midi" class="page">
+  <table id="midi-table">
+    <thead><tr><th>Function</th><th>Type</th><th>Number</th><th>Channel</th><th></th></tr></thead>
+    <tbody id="midi-tbody"></tbody>
+  </table>
+  <div style="margin-top:12px;display:flex;gap:8px">
+    <button class="primary" onclick="saveAssignments()">Save</button>
+    <button onclick="resetAssignments()">Reset to defaults</button>
+  </div>
+  <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+    <input id="setup-name-midi" type="text" placeholder="Setup name"
+           style="background:#222;border:1px solid #444;color:#eee;padding:4px 6px">
+    <button class="primary" onclick="saveSetup('midi')">Save Setup</button>
+    <select id="setup-select-midi" style="background:#222;border:1px solid #444;color:#eee;padding:4px 6px"></select>
+    <button onclick="loadSetup('midi')">Load Setup</button>
+  </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
