@@ -7,7 +7,7 @@
     {
       "name": "strip_1",
       "x": 5,
-      "y": 0,
+      "y": 40,
       "orientation": "V",
       "length": 40,
       "universe": 0,
@@ -16,7 +16,7 @@
     {
       "name": "strip_2",
       "x": 5,
-      "y": 40,
+      "y": 0,
       "orientation": "V",
       "length": 40,
       "universe": 0,
@@ -26,7 +26,7 @@
       "name": "strip_3",
       "x": 15,
       "y": 0,
-      "orientation": "V",
+      "orientation": "V180",
       "length": 40,
       "universe": 0,
       "start_channel": 240
@@ -35,15 +35,15 @@
       "name": "strip_4",
       "x": 15,
       "y": 40,
-      "orientation": "V",
+      "orientation": "V180",
       "length": 40,
       "universe": 0,
-      "start_channel": 240
+      "start_channel": 360
     },
     {
       "name": "strip_5",
       "x": 52,
-      "y": 7,
+      "y": 47,
       "orientation": "V",
       "length": 40,
       "universe": 1,
@@ -51,30 +51,30 @@
     },
     {
       "name": "strip_6",
-      "x": 61,
-      "y": 7,
-      "orientation": "V",
-      "length": 40,
-      "universe": 1,
-      "start_channel": 240
-    },
-    {
-      "name": "strip_7",
       "x": 52,
-      "y": 47,
+      "y": 7,
       "orientation": "V",
       "length": 40,
       "universe": 1,
       "start_channel": 120
     },
     {
-      "name": "strip_8",
+      "name": "strip_7",
       "x": 61,
-      "y": 47,
-      "orientation": "V",
+      "y": 7,
+      "orientation": "V180",
       "length": 40,
       "universe": 1,
       "start_channel": 240
+    },
+    {
+      "name": "strip_8",
+      "x": 61,
+      "y": 47,
+      "orientation": "V180",
+      "length": 40,
+      "universe": 1,
+      "start_channel": 360
     }
   ]
 }

@@ -207,13 +207,30 @@ function drawGrid() {
   fixtures.forEach((f, idx) => drawFixture(f, idx === selectedFixture, scale));
 }
 
+const ORIENTATIONS = ['H', 'H180', 'V', 'V180'];
+function isHorizontal(orientation) { return orientation === 'H' || orientation === 'H180'; }
+
 function drawFixture(f, selected, scale) {
   const len = f.length || 40;
+  const horiz = isHorizontal(f.orientation);
   const x = f.x * scale, y = f.y * scale;
-  const w = f.orientation === 'H' ? len * scale : 4;
-  const h = f.orientation === 'H' ? 4 : len * scale;
+  const w = horiz ? len * scale : 4;
+  const h = horiz ? 4 : len * scale;
   ctx.fillStyle = selected ? '#0af' : '#f80';
   ctx.fillRect(x, y, w, h);
+
+  // Pixel-0 marker (green) and last-pixel marker (red), placed per orientation.
+  const markerSize = 6;
+  let firstX = x, firstY = y, lastX = x, lastY = y;
+  if (f.orientation === 'H') { lastX = x + w - markerSize; }
+  else if (f.orientation === 'H180') { firstX = x + w - markerSize; }
+  else if (f.orientation === 'V') { firstY = y + h - markerSize; }
+  else if (f.orientation === 'V180') { lastY = y + h - markerSize; }
+  ctx.fillStyle = '#2ecc40';
+  ctx.fillRect(firstX, firstY, markerSize, markerSize);
+  ctx.fillStyle = '#ff4136';
+  ctx.fillRect(lastX, lastY, markerSize, markerSize);
+
   ctx.fillStyle = '#fff';
   ctx.font = '9px monospace';
   ctx.fillText(f.name || `f${fixtures.indexOf(f)}`, x+2, y+10);
@@ -225,8 +242,9 @@ gridCanvas.onclick = e => {
   let hit = -1;
   fixtures.forEach((f, i) => {
     const len = f.length || 40;
-    const fx2 = f.x + (f.orientation==='H' ? len : 4/scale);
-    const fy2 = f.y + (f.orientation==='H' ? 4/scale : len);
+    const horiz = isHorizontal(f.orientation);
+    const fx2 = f.x + (horiz ? len : 4/scale);
+    const fy2 = f.y + (horiz ? 4/scale : len);
     if (rx >= f.x && rx <= fx2 && ry >= f.y && ry <= fy2) hit = i;
   });
   if (hit >= 0) { selectedFixture = hit; showFixtureForm(fixtures[hit]); drawGrid(); }
@@ -314,7 +332,11 @@ document.addEventListener('keydown', e => {
   const f = fixtures[selectedFixture];
   const step = e.shiftKey ? 10 : 1;
 
-  if (e.key === '#') { e.preventDefault(); f.orientation = f.orientation === 'H' ? 'V' : 'H'; }
+  if (e.key === '#') {
+    e.preventDefault();
+    const idx = ORIENTATIONS.indexOf(f.orientation);
+    f.orientation = ORIENTATIONS[(idx + 1) % ORIENTATIONS.length];
+  }
   else if (e.key === 'ArrowUp')    { e.preventDefault(); f.y -= step; }
   else if (e.key === 'ArrowDown')  { e.preventDefault(); f.y += step; }
   else if (e.key === 'ArrowLeft')  { e.preventDefault(); f.x -= step; }

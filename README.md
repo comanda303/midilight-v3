@@ -72,10 +72,22 @@ Open the **Fixture Editor** tab in the browser UI:
 
 1. Set canvas size (W × H pixels)
 2. Click **+ Add Strip** for each LED strip
-3. Set X, Y position, orientation (H/V), ArtNet universe and start channel
+3. Set X, Y position, orientation, ArtNet universe and start channel
 4. Click **Save Layout**
 
 Each strip is 40 RGB pixels. Universe/channel must match your ArtNet node wiring.
+X/Y is always the top-left corner of the strip's bounding box, for every orientation.
+
+**Orientation** (press `#` in the editor to cycle):
+| Value | Pixel 0 | Growing toward |
+|-------|---------|-----------------|
+| `H` (default) | left | right |
+| `H180` | right | left |
+| `V` (default) | bottom | up |
+| `V180` | top | down |
+
+The green square marks pixel 0, the red square marks the last pixel, drawn on each
+strip in the editor canvas.
 
 ## MIDI learn
 
@@ -101,6 +113,11 @@ Recall: send MIDI note 64–87 from Ableton (or click in UI)
 Faders interpolate smoothly to the recalled values over 200 ms.
 
 ## Changelog
+
+### 2026-07-29
+- **Fixture orientation now has 4 states** (`H`, `H180`, `V`, `V180`) instead of 2, giving full 90°-step control over which end of a strip is pixel 0 — see Fixture mapping above. Editor canvas now draws a green square at pixel 0 and a red square at the last pixel of every strip.
+- **Breaking change:** `V` used to mean pixel 0 at the top; it now means pixel 0 at the **bottom** (matches the new "default = left or bottom" convention). `V180` is the old top-start behavior. `fixtures.json` was **not** auto-migrated — any fixture saved as `V` before this change will sample its pixels in reverse order the next time it's loaded. Check/re-save each strip's orientation in the Fixture Editor before your next live use.
+- `fixture_sampler.py` reverses the sampled pixel array for `H180`/`V`; `H`/`V180` are unchanged from before.
 
 ### 2026-07-27
 - **Fix:** `MidiDispatcher.on_message` in `midi_input.py` treated its first argument as the raw MIDI byte list, but `python-rtmidi` actually calls the callback with a `(message_bytes, delta_time)` tuple. This caused a `TypeError` inside the CoreMIDI real-time callback thread on every incoming message — silently swallowed, with no error output — so no MIDI ever reached the app (learn, clip triggers, CC control, all dead) despite the virtual port existing and accepting messages correctly. Fixed by unpacking `message, _deltatime = event` at the top of `on_message`. Updated all direct-call sites in `tests/test_midi_input.py` to pass the same `(message, delta_time)` tuple shape.

@@ -97,7 +97,12 @@
         <label>X</label><input id="f-x" type="number" value="0">
         <label>Y</label><input id="f-y" type="number" value="0">
         <label>Orient</label>
-        <select id="f-orient"><option value="H">Horizontal</option><option value="V">Vertical</option></select>
+        <select id="f-orient">
+          <option value="H">Horizontal (pixel 0 left)</option>
+          <option value="H180">Horizontal 180 (pixel 0 right)</option>
+          <option value="V">Vertical (pixel 0 bottom)</option>
+          <option value="V180">Vertical 180 (pixel 0 top)</option>
+        </select>
         <label>Universe</label><input id="f-universe" type="number" value="0">
         <label>Start CH</label><input id="f-ch" type="number" value="0">
         <button class="primary" onclick="applyFixture()" style="grid-column:1/-1;margin-top:8px">Apply</button>

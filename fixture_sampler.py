@@ -22,12 +22,16 @@ class FixtureSampler:
             if not (0 <= x < W and 0 <= y < H):
                 continue
 
-            if orientation == 'H':
+            if orientation in ('H', 'H180'):
                 x_end = min(x + length, W)
                 pixels = canvas[y, x:x_end]
+                if orientation == 'H180':
+                    pixels = pixels[::-1]
             else:
                 y_end = min(y + length, H)
                 pixels = canvas[y:y_end, x]
+                if orientation == 'V':
+                    pixels = pixels[::-1]
 
             if universe not in universe_bufs:
                 universe_bufs[universe] = bytearray(512)
