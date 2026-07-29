@@ -14,7 +14,9 @@ function connect() {
       canvasSize = msg.canvas;
       fixtures = msg.fixtures;
       selectedFixture = null;
+      selectedGroup = null;
       document.getElementById('fixture-form').style.display = 'none';
+      document.getElementById('group-form').style.display = 'none';
       document.getElementById('canvas-w').value = canvasSize.width;
       document.getElementById('canvas-h').value = canvasSize.height;
       drawGrid();
@@ -258,6 +260,7 @@ gridCanvas.onclick = e => {
 function addStrip() {
   fixtures.push({name: `strip_${fixtures.length+1}`, group:'', x:0, y:0,
                  orientation:'V', length:40, universe:0, start_channel:0});
+  selectedGroup = null;
   selectedFixture = fixtures.length - 1;
   showFixtureForm(fixtures[selectedFixture]);
   drawGrid();
@@ -361,6 +364,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Tab') {
     e.preventDefault();
     if (fixtures.length === 0) return;
+    selectedGroup = null;
     selectedFixture = selectedFixture === null ? 0 : (selectedFixture + 1) % fixtures.length;
     showFixtureForm(fixtures[selectedFixture]);
     drawGrid();
