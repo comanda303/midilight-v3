@@ -212,6 +212,27 @@ function drawGrid() {
 const ORIENTATIONS = ['H', 'H180', 'V', 'V180'];
 function isHorizontal(orientation) { return orientation === 'H' || orientation === 'H180'; }
 
+// 90-degree-clockwise orientation cycle for whole-group rotation -- derived from
+// rotating each orientation's pixel-0-to-last-pixel direction vector 90deg CW.
+// Deliberately a different cycle than the single-fixture '#' key above, which
+// never repositions anything so its cycle order is arbitrary.
+const ROTATE_CW = {H: 'V180', V180: 'H180', H180: 'V', V: 'H'};
+
+function groupBoundingBox(members) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  members.forEach(f => {
+    const len = f.length || 40;
+    const horiz = isHorizontal(f.orientation);
+    const w = horiz ? len : 4;
+    const h = horiz ? 4 : len;
+    minX = Math.min(minX, f.x);
+    minY = Math.min(minY, f.y);
+    maxX = Math.max(maxX, f.x + w);
+    maxY = Math.max(maxY, f.y + h);
+  });
+  return {cx: (minX + maxX) / 2, cy: (minY + maxY) / 2};
+}
+
 function drawFixture(f, selected, scale) {
   const len = f.length || 40;
   const horiz = isHorizontal(f.orientation);
@@ -356,6 +377,34 @@ function bulkSetNamePrefix() {
   if (!prefix) return;
   let i = 0;
   fixtures.forEach(f => { if (f.group === selectedGroup) { i++; f.name = `${prefix}_${i}`; } });
+  showGroupForm(selectedGroup);
+}
+
+function rotateGroup() {
+  if (selectedGroup === null) return;
+  const members = fixtures.filter(f => f.group === selectedGroup);
+  const {cx, cy} = groupBoundingBox(members);
+
+  members.forEach(f => {
+    const len = f.length || 40;
+    const horiz = isHorizontal(f.orientation);
+    const w = horiz ? len : 4;
+    const h = horiz ? 4 : len;
+    const centerX = f.x + w / 2, centerY = f.y + h / 2;
+
+    // Screen-space 90deg clockwise point rotation around (cx, cy): (dx,dy) -> (-dy,dx)
+    const newCenterX = cx - (centerY - cy);
+    const newCenterY = cy + (centerX - cx);
+
+    f.orientation = ROTATE_CW[f.orientation];
+    const newHoriz = isHorizontal(f.orientation);
+    const newW = newHoriz ? len : 4;
+    const newH = newHoriz ? 4 : len;
+    f.x = Math.round(newCenterX - newW / 2);
+    f.y = Math.round(newCenterY - newH / 2);
+  });
+
+  drawGrid();
   showGroupForm(selectedGroup);
 }
 
