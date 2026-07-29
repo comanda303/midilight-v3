@@ -335,6 +335,30 @@ function ungroupSelected() {
   drawGrid();
 }
 
+function bulkSetLength() {
+  if (selectedGroup === null) return;
+  const len = +document.getElementById('g-length').value;
+  fixtures.forEach(f => { if (f.group === selectedGroup) f.length = len; });
+  drawGrid();
+  showGroupForm(selectedGroup);
+}
+
+function bulkSetUniverse() {
+  if (selectedGroup === null) return;
+  const u = +document.getElementById('g-universe').value;
+  fixtures.forEach(f => { if (f.group === selectedGroup) f.universe = u; });
+  showGroupForm(selectedGroup);
+}
+
+function bulkSetNamePrefix() {
+  if (selectedGroup === null) return;
+  const prefix = document.getElementById('g-name-prefix').value.trim();
+  if (!prefix) return;
+  let i = 0;
+  fixtures.forEach(f => { if (f.group === selectedGroup) { i++; f.name = `${prefix}_${i}`; } });
+  showGroupForm(selectedGroup);
+}
+
 function applyFixture() {
   if (selectedFixture === null) return;
   fixtures[selectedFixture] = {
