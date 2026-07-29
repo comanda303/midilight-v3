@@ -3,7 +3,7 @@ const FADER_NAMES = ['Algorithm','Beat React','Rhythm','Speed','Hue','Saturation
                      'Colour Spread','Scale','Direction','Symmetry','Contrast','Blur/Glow'];
 const CC_NUMS = [24,25,26,27,28,29,30,31,32,33,34,35];
 
-let ws, state = {}, selectedPreset = null, selectedFixture = null;
+let ws, state = {}, selectedPreset = null, selectedFixture = null, selectedGroup = null;
 let fixtures = [], canvasSize = {width:200, height:100};
 
 function connect() {
@@ -14,7 +14,9 @@ function connect() {
       canvasSize = msg.canvas;
       fixtures = msg.fixtures;
       selectedFixture = null;
+      selectedGroup = null;
       document.getElementById('fixture-form').style.display = 'none';
+      document.getElementById('group-form').style.display = 'none';
       document.getElementById('canvas-w').value = canvasSize.width;
       document.getElementById('canvas-h').value = canvasSize.height;
       drawGrid();
@@ -204,11 +206,32 @@ function drawGrid() {
   for (let y = 0; y <= canvasSize.height; y += 10) {
     ctx.beginPath(); ctx.moveTo(0, y*scale); ctx.lineTo(gridCanvas.width, y*scale); ctx.stroke();
   }
-  fixtures.forEach((f, idx) => drawFixture(f, idx === selectedFixture, scale));
+  fixtures.forEach((f, idx) => drawFixture(f, idx === selectedFixture || (selectedGroup !== null && f.group === selectedGroup), scale));
 }
 
 const ORIENTATIONS = ['H', 'H180', 'V', 'V180'];
 function isHorizontal(orientation) { return orientation === 'H' || orientation === 'H180'; }
+
+// 90-degree-clockwise orientation cycle for whole-group rotation -- derived from
+// rotating each orientation's pixel-0-to-last-pixel direction vector 90deg CW.
+// Deliberately a different cycle than the single-fixture '#' key above, which
+// never repositions anything so its cycle order is arbitrary.
+const ROTATE_CW = {H: 'V180', V180: 'H180', H180: 'V', V: 'H'};
+
+function groupBoundingBox(members) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  members.forEach(f => {
+    const len = f.length || 40;
+    const horiz = isHorizontal(f.orientation);
+    const w = horiz ? len : 4;
+    const h = horiz ? 4 : len;
+    minX = Math.min(minX, f.x);
+    minY = Math.min(minY, f.y);
+    maxX = Math.max(maxX, f.x + w);
+    maxY = Math.max(maxY, f.y + h);
+  });
+  return {cx: (minX + maxX) / 2, cy: (minY + maxY) / 2};
+}
 
 function drawFixture(f, selected, scale) {
   const len = f.length || 40;
@@ -247,12 +270,18 @@ gridCanvas.onclick = e => {
     const fy2 = f.y + (horiz ? 4/scale : len);
     if (rx >= f.x && rx <= fx2 && ry >= f.y && ry <= fy2) hit = i;
   });
-  if (hit >= 0) { selectedFixture = hit; showFixtureForm(fixtures[hit]); drawGrid(); }
+  if (hit >= 0) {
+    selectedGroup = null;
+    selectedFixture = hit;
+    showFixtureForm(fixtures[hit]);
+    drawGrid();
+  }
 };
 
 function addStrip() {
-  fixtures.push({name: `strip_${fixtures.length+1}`, x:0, y:0,
+  fixtures.push({name: `strip_${fixtures.length+1}`, group:'', x:0, y:0,
                  orientation:'V', length:40, universe:0, start_channel:0});
+  selectedGroup = null;
   selectedFixture = fixtures.length - 1;
   showFixtureForm(fixtures[selectedFixture]);
   drawGrid();
@@ -277,23 +306,137 @@ function deleteStrip() {
 }
 
 function showFixtureForm(f) {
+  document.getElementById('group-form').style.display = 'none';
   document.getElementById('fixture-form').style.display = 'grid';
   document.getElementById('f-name').value = f.name || '';
+  document.getElementById('f-group').value = f.group || '';
   document.getElementById('f-x').value = f.x;
   document.getElementById('f-y').value = f.y;
   document.getElementById('f-orient').value = f.orientation || 'H';
   document.getElementById('f-universe').value = f.universe;
   document.getElementById('f-ch').value = f.start_channel;
+
+  const btn = document.getElementById('select-group-btn');
+  if (f.group) {
+    const count = fixtures.filter(x => x.group === f.group).length;
+    btn.textContent = `Select Group (${count})`;
+    btn.style.display = 'block';
+  } else {
+    btn.style.display = 'none';
+  }
+}
+
+function selectGroupOfCurrent() {
+  if (selectedFixture === null) return;
+  const g = fixtures[selectedFixture].group;
+  if (!g) return;
+  selectGroup(g);
+}
+
+function selectGroup(g) {
+  selectedGroup = g;
+  selectedFixture = null;
+  document.getElementById('fixture-form').style.display = 'none';
+  showGroupForm(g);
+  drawGrid();
+}
+
+function showGroupForm(g) {
+  const members = fixtures.filter(f => f.group === g);
+  document.getElementById('group-form').style.display = 'block';
+  document.getElementById('group-name-display').textContent = `${g} (${members.length})`;
+  document.getElementById('group-members').textContent = members.map(f => f.name).join(', ');
+}
+
+function ungroupSelected() {
+  if (selectedGroup === null) return;
+  fixtures.forEach(f => { if (f.group === selectedGroup) f.group = ''; });
+  selectedGroup = null;
+  document.getElementById('group-form').style.display = 'none';
+  drawGrid();
+}
+
+function bulkSetLength() {
+  if (selectedGroup === null) return;
+  const len = +document.getElementById('g-length').value;
+  fixtures.forEach(f => { if (f.group === selectedGroup) f.length = len; });
+  drawGrid();
+  showGroupForm(selectedGroup);
+}
+
+function bulkSetUniverse() {
+  if (selectedGroup === null) return;
+  const u = +document.getElementById('g-universe').value;
+  fixtures.forEach(f => { if (f.group === selectedGroup) f.universe = u; });
+  showGroupForm(selectedGroup);
+}
+
+function bulkSetNamePrefix() {
+  if (selectedGroup === null) return;
+  const prefix = document.getElementById('g-name-prefix').value.trim();
+  if (!prefix) return;
+  let i = 0;
+  fixtures.forEach(f => { if (f.group === selectedGroup) { i++; f.name = `${prefix}_${i}`; } });
+  showGroupForm(selectedGroup);
+}
+
+function rotateGroup() {
+  if (selectedGroup === null) return;
+  const members = fixtures.filter(f => f.group === selectedGroup);
+  const {cx, cy} = groupBoundingBox(members);
+
+  members.forEach(f => {
+    const len = f.length || 40;
+    const horiz = isHorizontal(f.orientation);
+    const w = horiz ? len : 4;
+    const h = horiz ? 4 : len;
+    const centerX = f.x + w / 2, centerY = f.y + h / 2;
+
+    // Screen-space 90deg clockwise point rotation around (cx, cy): (dx,dy) -> (-dy,dx)
+    const newCenterX = cx - (centerY - cy);
+    const newCenterY = cy + (centerX - cx);
+
+    f.orientation = ROTATE_CW[f.orientation];
+    const newHoriz = isHorizontal(f.orientation);
+    const newW = newHoriz ? len : 4;
+    const newH = newHoriz ? 4 : len;
+    f.x = Math.round(newCenterX - newW / 2);
+    f.y = Math.round(newCenterY - newH / 2);
+  });
+
+  drawGrid();
+  showGroupForm(selectedGroup);
+}
+
+function uniqueGroupName(base) {
+  const existing = new Set(fixtures.map(f => f.group).filter(g => g));
+  let candidate = `${base}_copy`;
+  let n = 2;
+  while (existing.has(candidate)) {
+    candidate = `${base}_copy${n}`;
+    n++;
+  }
+  return candidate;
+}
+
+function copyGroup() {
+  if (selectedGroup === null) return;
+  const members = fixtures.filter(f => f.group === selectedGroup);
+  const newGroupName = uniqueGroupName(selectedGroup);
+  const copies = members.map(f => ({...f, name: `${f.name}_copy`, group: newGroupName, universe: f.universe + 1}));
+  fixtures.push(...copies);
+  selectGroup(newGroupName);
 }
 
 function applyFixture() {
   if (selectedFixture === null) return;
   fixtures[selectedFixture] = {
     name: document.getElementById('f-name').value,
+    group: document.getElementById('f-group').value.trim(),
     x: +document.getElementById('f-x').value,
     y: +document.getElementById('f-y').value,
     orientation: document.getElementById('f-orient').value,
-    length: 40,
+    length: fixtures[selectedFixture].length ?? 40,
     universe: +document.getElementById('f-universe').value,
     start_channel: +document.getElementById('f-ch').value,
   };
@@ -314,6 +457,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Tab') {
     e.preventDefault();
     if (fixtures.length === 0) return;
+    selectedGroup = null;
     selectedFixture = selectedFixture === null ? 0 : (selectedFixture + 1) % fixtures.length;
     showFixtureForm(fixtures[selectedFixture]);
     drawGrid();
@@ -323,14 +467,27 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     e.preventDefault();
     selectedFixture = null;
+    selectedGroup = null;
     document.getElementById('fixture-form').style.display = 'none';
+    document.getElementById('group-form').style.display = 'none';
+    drawGrid();
+    return;
+  }
+
+  const step = e.shiftKey ? 10 : 1;
+
+  if (selectedGroup !== null) {
+    if (e.key === 'ArrowUp')         { e.preventDefault(); fixtures.forEach(f => { if (f.group === selectedGroup) f.y -= step; }); }
+    else if (e.key === 'ArrowDown')  { e.preventDefault(); fixtures.forEach(f => { if (f.group === selectedGroup) f.y += step; }); }
+    else if (e.key === 'ArrowLeft')  { e.preventDefault(); fixtures.forEach(f => { if (f.group === selectedGroup) f.x -= step; }); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); fixtures.forEach(f => { if (f.group === selectedGroup) f.x += step; }); }
+    else return;
     drawGrid();
     return;
   }
 
   if (selectedFixture === null) return;
   const f = fixtures[selectedFixture];
-  const step = e.shiftKey ? 10 : 1;
 
   if (e.key === '#') {
     e.preventDefault();
