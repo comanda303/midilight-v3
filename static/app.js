@@ -436,7 +436,7 @@ function applyFixture() {
     x: +document.getElementById('f-x').value,
     y: +document.getElementById('f-y').value,
     orientation: document.getElementById('f-orient').value,
-    length: 40,
+    length: fixtures[selectedFixture].length ?? 40,
     universe: +document.getElementById('f-universe').value,
     start_channel: +document.getElementById('f-ch').value,
   };
